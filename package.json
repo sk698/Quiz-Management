@@ -1,0 +1,25 @@
+{
+  "name": "quiz-management",
+  "version": "1.0.0",
+  "description": "A simple quiz management system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sk698/Quiz-Management.git"
+  },
+  "keywords": [
+    "quiz"
+  ],
+  "author": "Sachin Sharma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sk698/Quiz-Management/issues"
+  },
+  "homepage": "https://github.com/sk698/Quiz-Management#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
