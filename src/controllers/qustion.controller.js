@@ -7,7 +7,11 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 const addQuestionToQuiz = asyncHandler(async (req, res) => {
     const { quizId } = req.params;
+    
     const quiz = await Quiz.findById(quizId);
+    if(!quiz){
+        throw new ApiError(404, "Quiz not found");
+    }
 
     if(quiz.createdBy.toString() != req.user?._id.toString()){
         
@@ -24,10 +28,6 @@ const addQuestionToQuiz = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Question is required");
     }
 
-
-    if(!quiz){
-        throw new ApiError(404, "Quiz not found");
-    }
 
     const createdQuestion = [];
 

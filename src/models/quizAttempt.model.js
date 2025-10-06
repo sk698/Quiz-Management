@@ -27,10 +27,16 @@ const quizAttemptSchema = new Schema(
             required: true,
             min: 0,
         },
-    },
-    {
-        timestamps: true,
-    }
-);
+        submittedAnswers: [ 
+        {
+            questionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Question' },
+            optionId: { type: mongoose.Schema.Types.ObjectId }
+        }
+    ],
+    submittedAt: { type: Date, default: Date.now }
+    
+});
+
+quizAttemptSchema.index({ user: 1, quiz: 1 }, { unique: true });
 
 export const QuizAttempt = mongoose.model("QuizAttempt", quizAttemptSchema);
