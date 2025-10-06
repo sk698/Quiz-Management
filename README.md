@@ -221,3 +221,5 @@ This guide explains how to test the API using the provided Postman collection, w
 
 ----
 
+# Video Link
+- 🔗 [Video Link](https://drive.google.com/file/d/1NQ5f1yw3WVwKKFveyqCQHCoqh0y8_lKs/view?usp=sharing)
