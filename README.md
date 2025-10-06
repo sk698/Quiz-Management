@@ -85,7 +85,7 @@ REFRESH_TOKEN_SECRET=yourSuperSecretRefreshTokenString
 ACCESS_TOKEN_EXPIRY=1d
 REFRESH_TOKEN_EXPIRY=10d
 ```
->#### Your folder Structure should be look like this
+>#### Your folder Structure should look like this
 ```
 Quiz-Management/
 ├── node_modules 
