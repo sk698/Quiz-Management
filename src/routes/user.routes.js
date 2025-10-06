@@ -9,8 +9,12 @@ const router = Router();
 router.route("/register").post(upload.none(),registerUser);
 router.route("/login").post(upload.none(),loginUser);
 
+
 //secured user routes
 router.route("/logout").get(verifyJWT, logoutUser)
 router.route("/refresh-token").get(verifyJWT,refreshAccessToken)
 router.route("/changePassword").get(verifyJWT,changeCurrentPassword)
+
+
+
 export default router;
