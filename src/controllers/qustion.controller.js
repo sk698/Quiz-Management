@@ -73,5 +73,5 @@ const getAllQuestions = asyncHandler(async (req, res) => {
 
 export { 
     addQuestionToQuiz,
-    getAllQuestions
+    getAllQuestions,
 };

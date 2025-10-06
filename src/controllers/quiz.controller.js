@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse..js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Question } from "../models/question.model.js";
+import { QuizAttempt } from "../models/quizAttempt.model.js";
 
 const createQuiz = asyncHandler(async (req, res) => {
     const { title } = req.body;
@@ -36,12 +37,25 @@ const getAllQuizzes = asyncHandler(async (req, res) => {
 });
 
 const deleteQuiz = asyncHandler(async (req, res) => {
-    const { id } = req.params;
-    const quiz = await Quiz.findByIdAndDelete(id);
+    const { quizId } = req.params;
+    const questions = await Question.deleteMany({quiz: quizId})
+    if (!questions){
+        throw new ApiError(404, "Error while deleting question")
+    }
+
+    const submission = await QuizAttempt.deleteMany({quiz: quizId})
+    if (!submission){
+        throw new ApiError(404, "Error while deleting submission")
+    }
+    
+    const quiz = await Quiz.findByIdAndDelete(quizId);
 
     if (!quiz) {
         throw new ApiError(404, "Quiz not found");
     }
+
+    
+    
     res.status(200).json(
         new ApiResponse(200, quiz, "Quiz deleted successfully")
     );
@@ -49,7 +63,15 @@ const deleteQuiz = asyncHandler(async (req, res) => {
 
 const submitQuiz = asyncHandler(async (req, res) => {
     const { quizId } = req.params;
-    const { answers } = req.body;     
+    const { answers } = req.body;
+
+
+    const userId = req.user?._id; 
+    
+    if (!userId) {
+        throw new ApiError(401, "User not authenticated");
+    }
+
     if (!answers || !Array.isArray(answers) || answers.length === 0) {
         throw new ApiError(400, "Answers are required and should be a non-empty array");
     }
@@ -69,18 +91,30 @@ const submitQuiz = asyncHandler(async (req, res) => {
 
         const OptionId = question.options.id(answer.OptionId); 
         if (OptionId && OptionId.isCorrect) {
-            score ++;
+            score++;
         }
     });
 
+    const quizAttempt = await QuizAttempt.create({
+        user: userId,
+        quiz: quizId,
+        score: score,
+        totalQuestions: total,
+    });
+
+    if (!quizAttempt) {
+        throw new ApiError(500, "Failed to save the quiz attempt");
+    }
+
+  
     return res.status(200).json(
         new ApiResponse(
             200,
-            { score, total },
-            "Quiz submitted successfully"
+            quizAttempt,
+            "Quiz submitted and results saved successfully"
         )
     );
-})
+});
 
 export {
     createQuiz,
