@@ -104,7 +104,7 @@ Quiz-Management/
 Once the dependencies are installed and the environment variables are configured, you can start the server:
 
 ```bash
-npm start
+npm run dev
 ```
 
 The server should now be running at `http://localhost:8000` or the port you specified in your `.env` file.
