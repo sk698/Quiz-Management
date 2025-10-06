@@ -14,6 +14,7 @@ const createQuiz = asyncHandler(async (req, res) => {
 
     const quiz = await Quiz.create({
         title,
+        createdBy: req.user?._id
     });
 
     if (!quiz) {
@@ -29,6 +30,8 @@ const createQuiz = asyncHandler(async (req, res) => {
     );
 });
 
+
+
 const getAllQuizzes = asyncHandler(async (req, res) => {
     const quizzes = await Quiz.find().sort({ createdAt: -1 });
     res.status(200).json(
@@ -36,8 +39,16 @@ const getAllQuizzes = asyncHandler(async (req, res) => {
     );
 });
 
+
+
 const deleteQuiz = asyncHandler(async (req, res) => {
     const { quizId } = req.params;
+    const quiz = await Quiz.findByIdAndDelete(quizId);
+
+    if(quiz.createdBy.toString() != req.user?._id.toString()){
+        throw new ApiError(403, "You are not allowed to delete another admin's data")
+    }
+    
     const questions = await Question.deleteMany({quiz: quizId})
     if (!questions){
         throw new ApiError(404, "Error while deleting question")
@@ -48,7 +59,7 @@ const deleteQuiz = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Error while deleting submission")
     }
     
-    const quiz = await Quiz.findByIdAndDelete(quizId);
+    
 
     if (!quiz) {
         throw new ApiError(404, "Quiz not found");
@@ -115,6 +126,8 @@ const submitQuiz = asyncHandler(async (req, res) => {
         )
     );
 });
+
+
 
 export {
     createQuiz,

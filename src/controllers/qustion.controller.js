@@ -7,6 +7,13 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 const addQuestionToQuiz = asyncHandler(async (req, res) => {
     const { quizId } = req.params;
+    const quiz = await Quiz.findById(quizId);
+
+    if(quiz.createdBy.toString() != req.user?._id.toString()){
+        
+        throw new ApiError(403, "You are not allowed to modify another admin's data")
+    }
+
     let questiondata = req.body;
 
     if(!Array.isArray(questiondata)){
@@ -17,7 +24,6 @@ const addQuestionToQuiz = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Question is required");
     }
 
-    const quiz = await Quiz.findById(quizId);
 
     if(!quiz){
         throw new ApiError(404, "Quiz not found");
